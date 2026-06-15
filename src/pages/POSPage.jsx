@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import api, { STORAGE_URL } from '../services/api';
 import PaymentModal from '../components/Pos/PaymentModal';
 import ReceiptModal from '../components/ReceiptModal';
 
@@ -26,8 +26,6 @@ export default function POSPage() {
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
-
-
   const fetchCurrentUser = async () => {
     try {
       const res = await api.get('/user');
@@ -46,7 +44,8 @@ export default function POSPage() {
       
       setProducts(Array.isArray(data) ? data : []);
       
-      const cats = ['Semua', ...new Set((Array.isArray(data) ? data : []).map((p) => p.kategori).filter(Boolean))];
+      const cats = ['Semua', ...new Set((Array.isArray(data) ? 
+        data : []).map((p) => p.kategori).filter(Boolean))];
       setCategories(cats);
     } catch (err) {
       console.error('Gagal mengambil produk', err);
@@ -178,7 +177,7 @@ export default function POSPage() {
                   <div className="w-full h-28 bg-gray-100 rounded-lg overflow-hidden mb-2 flex items-center justify-center">
                     {product.gambar ? (
                       <img
-                        src={product.gambar}
+                        src={`${STORAGE_URL}/${product.gambar}`}
                         alt={product.nama_barang}
                         className="w-full h-full object-cover text-black"
                       />

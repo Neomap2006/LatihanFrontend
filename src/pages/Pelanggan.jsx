@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-const BASE_URL = 'http://127.0.0.1:8000/api';
-// const BASE_URL = 'https://laravel-api.kebunkode.com/api';
+import api from '../services/api';
 
 const formatRupiah = (n) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
@@ -32,7 +29,7 @@ export default function Pelanggan() {
   const fetchPelanggan = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${BASE_URL}/pelanggan`, {
+      const res = await api.get(`/pelanggan`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPelanggan(res.data.data || res.data);
@@ -73,11 +70,11 @@ export default function Pelanggan() {
 
     try {
       if (editData) {
-        await axios.put(`${BASE_URL}/pelanggan/${editData.id}`, form, {
+        await api.put(`/pelanggan/${editData.id}`, form, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post(`${BASE_URL}/pelanggan`, form, {
+        await api.post(`/pelanggan`, form, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -85,7 +82,8 @@ export default function Pelanggan() {
       fetchPelanggan();
     } catch (err) {
       const msg =
-        err.response?.data?.errors?.no_hp?.[0] || err.response?.data?.message || 'Gagal menyimpan';
+        err.response?.data?.errors?.no_hp?.[0] 
+        || err.response?.data?.message || 'Gagal menyimpan';
       setError(msg);
     } finally {
       setSaving(false);
@@ -94,7 +92,7 @@ export default function Pelanggan() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${BASE_URL}/pelanggan/${deleteTarget.id}`, {
+      await api.delete(`/pelanggan/${deleteTarget.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDeleteTarget(null);
@@ -106,7 +104,7 @@ export default function Pelanggan() {
 
   const openHistory = async (p) => {
     try {
-      const res = await axios.get(`${BASE_URL}/orders`, {
+      const res = await api.get(`/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const allOrders = res.data.data || res.data;

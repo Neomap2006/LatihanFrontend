@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
-
-const BASE_URL = 'http://127.0.0.1:8000/api';
-// const BASE_URL = 'https://laravel-api.kebunkode.com/api';
+import api from '../../services/api';
 
 const formatRupiah = (number) =>
   new Intl.NumberFormat('id-ID', {
@@ -40,7 +37,7 @@ export default function PaymentModal({ cart, total, user, token, onClose, onSucc
     setIsNewCustomer(false);
 
     try {
-      const res = await axios.get(`${BASE_URL}/pelanggan/phone/${phoneInput}`, {
+      const res = await api.get(`/pelanggan/phone/${phoneInput}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPelanggan(res.data.data);
@@ -69,7 +66,7 @@ export default function PaymentModal({ cart, total, user, token, onClose, onSucc
 
       // Buat pelanggan baru jika perlu
       if (isNewCustomer && newCustomer.nama && newCustomer.no_hp) {
-        const createRes = await axios.post(`${BASE_URL}/pelanggan`, newCustomer, {
+        const createRes = await api.post(`/pelanggan`, newCustomer, {
           headers: { Authorization: `Bearer ${token}` },
         });
         pelangganId = createRes.data.data.id;
@@ -85,7 +82,7 @@ export default function PaymentModal({ cart, total, user, token, onClose, onSucc
         })),
       };
 
-      const res = await axios.post(`${BASE_URL}/orders`, payload, {
+      const res = await api.post(`/orders`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',

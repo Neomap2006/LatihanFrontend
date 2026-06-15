@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, Fragment } from 'react';
 
 const formatRupiah = (number) =>
   new Intl.NumberFormat('id-ID', {
@@ -41,7 +41,6 @@ export default function ReceiptModal({ order, onClose }) {
           </div>
 
           <hr className="border-dashed my-2" />
-
           <div className="text-xs space-y-1 mb-2">
             <div className="flex justify-between">
               <span>No. Order</span>
@@ -58,10 +57,12 @@ export default function ReceiptModal({ order, onClose }) {
           <table className="w-full text-xs mb-2">
             <tbody>
               {order.items?.map((item, idx) => (
-                <tr key={idx}>
-                  <td colSpan={3} className="font-semibold text-black">
-                    {item.produk_name}
-                  </td>
+                <Fragment key={idx}>
+                  <tr>
+                    <td colSpan={2} className="font-semibold text-black">
+                      {item.produk_name}
+                    </td>
+                  </tr>
                   <tr>
                     <td className="text-black">
                       {item.quantity} x {formatRupiah(item.price)}
@@ -70,7 +71,7 @@ export default function ReceiptModal({ order, onClose }) {
                       {formatRupiah(item.subtotal)}
                     </td>
                   </tr>
-                </tr>
+                </Fragment>
               ))}
             </tbody>
           </table>
